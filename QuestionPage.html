@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<head>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+
+  <div id="intro">
+ <div>
+    Do you know what a syllogism is?<br/>
+    Well, let me give you an example and a description.<br/><br/>
+
+    Aristotle is a man.<br/>
+    All men are mortal.<br/>
+    Therefore, Aristotle is mortal.<br/><br/>
+
+    That is a valid Syllogism. There are two premises and then a conclusion.<br/>
+    You will be shown a number of syllogisms. There will be two premises and a conclusion.<br/>
+    You are to indicate if the conclusion follows logically from the two premises. <br/>
+    The important thing is the logic. It does not matter if the conclusion makes sense or is false.<br/>
+    You are to make your decision on the logic of the problem. <br/>
+    That is, does the conclusion logically follow the two premises.<br/><br/>
+
+    After you indicate whether the syllogism is valid or invalid,<br/>
+    you will be asked to rate how certain you are about the correctness of your answer.<br/>
+</div>
+
+<input type="button" value="shuffle" id="shuffle" onclick="mixIt()"/>
+<input type="button" value="start" id="start" onclick="start()"/>
+</div>
+
+<style>
+
+    #textBox {
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        width : 200px;
+        height : 100px;
+        border : 2px solid blue;
+      }
+
+</style>
+
+<div id="innerDiv" style="display:none">
+    <div id="textBox"></div>
+    <input type="button"   value="true" onclick="submitAnswer(1)"/>
+    <input type="button"   value="false" onclick="submitAnswer(0)"/>
+</div>
+
+<div id="finalDiv" style="display:none">
+    <div id="questionBox">How sure are you (1-min, 5-max)?</div>
+    <input type="button"   value="1" onclick="submitCertainty(1)"/>
+    <input type="button"   value="2" onclick="submitCertainty(2)"/>
+    <input type="button"   value="3" onclick="submitCertainty(3)"/>
+    <input type="button"   value="4" onclick="submitCertainty(4)"/>
+    <input type="button"   value="5" onclick="submitCertainty(5)"/>
+</div>
+
+<script LANGUAGE="JavaScript" TYPE="text/javascript">
+
+    var givenAnswers = new Array(20);
+    var countAnswers = 0;
+    var givenCertainty = new Array(20);
+    var countCertainty = 0;
+
+    var arraySyllab = [
+        {
+          "syllable" : "No reptiles are mammals. <br/>All animals are mammals. <br/>Therefore, no reptiles are mammals.",
+           "status" : "true"
+        },
+
+        {
+            "syllable" : "All Canadians love snow.<br/>All loggers are Canadian.<br/>Therefore, all loggers love snow.",
+            "status" : "false"
+        },
+
+        {
+            "syllable" : "All poodles are animals.<br/>All animals are wild.<br/>Therefore, all poodles are wild.",
+            "status" : "true"
+        },
+
+        {
+            "syllable"  :"All girls are dancers.<br/>All dancers are left handed. <br/>Therefore, all girls are left handed.",
+            "status" : "true"
+        },
+
+        {
+            "syllable"  :"All girls are dancers.<br/>All dancers are left handed. <br/>Therefore, all girls are left handed.",
+            "status" : "true"
+        },
+
+        {
+            "syllable"  :"All women are teachers.<br/>All teachers are nice people.<br/>Therefore, all women are nice people.",
+            "status" : "true"
+        }
+     ]
+
+    function start()
+    {
+        var elem1 = document.getElementById("intro");
+        elem1.parentNode.removeChild(elem1);
+       document.getElementById("innerDiv").style.display = "";
+       document.getElementById("textBox").innerHTML = arraySyllab[0].syllable;
+    }
+
+    function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        while (0 !== currentIndex) {
+
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
+    function mixIt() {
+        shuffle(arraySyllab);
+    }
+
+    function submitAnswer(y)
+    {
+        if(y==1)
+            givenAnswers[countAnswers]="true";
+        else
+            givenAnswers[countAnswers]="false";
+        $("#innerDiv").hide();
+        $("#finalDiv").show();
+
+        countAnswers++;
+    }
+
+    function submitCertainty (x)
+    {
+        givenCertainty[countCertainty] = x;
+        countCertainty++;
+        if(countCertainty==5)
+            statistics();
+        else
+        {
+        $("#finalDiv").hide();
+        $("#innerDiv").show();
+        document.getElementById("textBox").innerHTML = arraySyllab[countCertainty].syllable;
+        }
+    }
+
+    function statistics()
+    {
+        var countCorrect=0;
+
+        for(var i=0; i<5; i++)
+        {
+            if(givenAnswers[i]==arraySyllab[i].status)
+                countCorrect++;
+        }
+        alert("Number of correct answers "+countCorrect);
+    }
+
+    var myVar = setInterval(function(){ myTimer() }, 1000);
+
+    function myTimer() {
+        var d = new Date();
+        var t = d.toLocaleTimeString();
+        document.getElementById("demo").innerHTML = t;
+    }
+
+
+
+</script>
+</body>
+</html>
